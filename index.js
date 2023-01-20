@@ -1,12 +1,15 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const cors = require("cors");
 const main = require("./routes/main");
 const opn = require("open");
+const bodyParser = require("body-parser");
 const { google } = require("googleapis");
 const app = express();
 const PORT = 1234;
-
+app.use(cors());
+app.use(bodyParser.json());
 require("dotenv").config();
 const clientID =
   "873087145391-m9e0ldgdol7a097a9klcsfhj7pir03l5.apps.googleusercontent.com";
@@ -30,10 +33,10 @@ const url = oauth2Client.generateAuthUrl({
   // If you only need one scope you can pass it as a string
   scope: "https://www.googleapis.com/auth/calendar",
 });
-opn(url, { wait: false });
+// opn(url, { wait: false });
 app.get("/oauth2callback", async (req, res) => {
   const code = req.query.code;
-  console.log(code);
+
   const { tokens } = await oauth2Client.getToken(code);
   oauth2Client.setCredentials(tokens);
   const calendar = google.calendar({ version: "v3" });
@@ -57,17 +60,20 @@ app.get("/oauth2callback", async (req, res) => {
   //     console.log(`Event created: ${event.data.htmlLink}`);
   //   }
   // );
-  calendar.events.list({ calendarId: "primary" }, (err, res) => {
-    if (err) res.send(err);
-    const events = res.data.items;
-    if (events.length) {
-      console.log(events);
-    }
-  });
+  // calendar.events.list({ calendarId: "primary" }, (err, res) => {
+  //   if (err) res.send(err);
+  //   const events = res.data.items;
+  //   if (events.length) {
+  //     console.log(events);
+  //   }
+  // });
 
   res.end("whats that");
 });
-
+app.post("/dateInfo", (req, res) => {
+  console.log(req.body);
+  res.end("thanks");
+});
 app.use("/main", main);
 
 app.listen(PORT, () => console.log("listening on port: ", PORT));
