@@ -33,33 +33,13 @@ const url = oauth2Client.generateAuthUrl({
   // If you only need one scope you can pass it as a string
   scope: "https://www.googleapis.com/auth/calendar",
 });
-// opn(url, { wait: false });
+opn(url, { wait: false });
 app.get("/oauth2callback", async (req, res) => {
   const code = req.query.code;
 
   const { tokens } = await oauth2Client.getToken(code);
   oauth2Client.setCredentials(tokens);
-  const calendar = google.calendar({ version: "v3" });
-  // const event = {
-  //   summary: "Appointment",
-  //   location: "Somewhere",
-  //   start: {
-  //     dateTime: new Date(),
-  //     timeZone: "America/Los_Angeles",
-  //   },
-  //   end: {
-  //     dateTime: new Date(new Date().getTime() + 60 * 60 * 1000),
-  //     timeZone: "America/Los_Angeles",
-  //   },
-  // };
 
-  // calendar.events.insert(
-  //   { calendarId: "primary", resource: event },
-  //   (err, event) => {
-  //     if (err) return console.log("The API returned an error: " + err);
-  //     console.log(`Event created: ${event.data.htmlLink}`);
-  //   }
-  // );
   // calendar.events.list({ calendarId: "primary" }, (err, res) => {
   //   if (err) res.send(err);
   //   const events = res.data.items;
@@ -73,6 +53,32 @@ app.get("/oauth2callback", async (req, res) => {
 app.post("/dateInfo", (req, res) => {
   console.log(req.body);
   res.end("thanks");
+});
+app.post("/eventInfo", (req, res) => {
+  const reservation = new Date(req.body.day);
+  const hour = Number(req.body.hour.substring(0, 2));
+  reservation.setHours(hour);
+  const calendar = google.calendar({ version: "v3" });
+  const event = {
+    summary: "Appointment",
+    location: "Somewhere",
+    start: {
+      dateTime: new Date(reservation),
+      timeZone: "America/Los_Angeles",
+    },
+    end: {
+      dateTime: new Date(reservation.getTime() + 60 * 60 * 1000),
+      timeZone: "America/Los_Angeles",
+    },
+  };
+  calendar.events.insert(
+    { calendarId: "primary", resource: event },
+    (err, event) => {
+      if (err) return console.log("The API returned an error: " + err);
+      console.log(`Event created: ${event.data.htmlLink}`);
+    }
+  );
+  res.status(200).end("nice work today!");
 });
 app.use("/main", main);
 
