@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import HourPicker from "./components/hourPicker";
 import "react-calendar/dist/Calendar.css";
 import "./App.css";
-import axios from "axios";
+import ReservationModal from "./components/reservationModal";
 
 function App() {
+  useEffect(() => {});
   // authenticate users with gmail
   // add events
   // const handleClickDay = async (value) => {
@@ -17,21 +18,41 @@ function App() {
   //     .catch((error) => console.log(error));
   // };
   const [value, onChange] = useState(new Date());
+  const [events, setEvents] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [hour, setHour] = useState("");
+  const [when, setWhen] = useState("");
 
   return (
     <div className="app">
-      {/* <header className="App-header">welcome to appointments</header> */}
+      <div className="calendarHour">
+        <Calendar
+          className="calendar"
+          onChange={onChange}
+          value={value}
 
-      <Calendar
-        className="calendar"
-        onChange={onChange}
-        value={value}
-        defaultView={"year"}
-        // onClickDay={handleClickDay}
-      />
-      {console.log("this value: ", value)}
-      <HourPicker className="hourpicker" day={value} />
-      {console.log("hello")}
+          // onClickDay={handleClickDay}
+        />
+        <HourPicker
+          className="hourpicker"
+          setWhen={setWhen}
+          events={events}
+          day={value}
+          openModal={setShowModal}
+          setHour={setHour}
+        />
+      </div>
+      {showModal ? (
+        <ReservationModal
+          className="reservationForm"
+          day={value}
+          events={events}
+          when={when}
+          setEvents={setEvents}
+          hour={hour}
+          hide={setShowModal}
+        />
+      ) : null}
     </div>
   );
 }

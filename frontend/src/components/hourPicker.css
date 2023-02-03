@@ -1,32 +1,31 @@
 .container {
-  justify-content: space-between;
-  margin-top: 500px;
-  margin-right: 1000px;
+  margin-right: 150px;
+  margin-top: 50px;
   border: none;
   display: block;
-  width: 500px;
+  width: 300px;
+  height: 500px;
 }
 .header {
+  position: relative;
+  margin-left: 25px;
   font-size: x-large;
-  margin-bottom: 10px;
-  margin-top: 10px;
+  margin-bottom: 15px;
 
-  text-align: center;
+  color: rgb(119, 218, 195);
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
 }
 .hourButton {
-  display: inline-flex;
   border-radius: 12px;
   margin-left: 7px;
-  margin-top: 7px;
+  margin-top: 25px;
   text-align: center;
   border: none;
   background-color: rgb(7, 244, 169);
   color: brown;
-  height: 100px;
+  height: 70px;
   width: min-content;
-  padding-top: 30px;
-  padding: 20px;
+
   cursor: pointer;
 }
 .hourButton:hover {

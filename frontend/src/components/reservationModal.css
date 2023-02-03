@@ -1,0 +1,61 @@
+.reservationForm {
+  margin-top: 30px;
+  border-radius: 5%;
+  height: 400px;
+  background-color: rgb(69, 48, 81);
+  width: 225px;
+}
+.name,
+.info,
+.email,
+.phone {
+  margin-left: 6px;
+  width: 200px;
+  height: 55px;
+  font-family: cursive;
+  font-weight: bolder;
+  font-size: medium;
+}
+.bookingButton {
+  position: relative;
+  cursor: crosshair;
+  left: 5%;
+  margin-bottom: 10px;
+  width: 200px;
+  height: 33px;
+  text-align: center;
+  margin-top: 10px;
+  background-color: aquamarine;
+}
+.cancel {
+  margin-left: 200px;
+  margin-top: 5px;
+  color: white;
+  cursor: pointer;
+}
+.formtitle {
+  position: relative;
+  left: 20%;
+  margin-left: 10px;
+  color: white;
+  font-size: x-large;
+}
+.titleForm {
+  display: inline-block;
+  background-color: rgb(49, 20, 78);
+}
+.titleForm > h1 {
+  color: aquamarine;
+  margin-left: 10px;
+}
+.date,
+.desc,
+.time {
+  color: white;
+  margin-top: 0;
+  margin-left: 5px;
+}
+.error {
+  color: yellow;
+  margin-left: 10px;
+}
