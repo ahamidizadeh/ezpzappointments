@@ -2,32 +2,48 @@ import React, { Component, useEffect, useState } from "react";
 import axios from "axios";
 import "./hourPicker.css";
 function HourPicker(props) {
-  const [events, setEvents] = useState([]);
-  const [hours, setHours] = useState([]); // const [bookedHours, setBookedHours] = useState([]);
+  const allHours = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
+
+  const [availableHours, setAvailableHours] = useState(allHours);
+
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const res = await axios.get(
-          `http://localhost:1234/events?date=${props.day}`
-        );
-        setEvents(res.data);
-      } catch (error) {
-        console.log(error);
+    if (!props.filteredEvents.length) {
+      setAvailableHours(allHours);
+    } else {
+      const takenHours = props.filteredEvents.map((e) =>
+        new Date(e.startTime).getHours()
+      );
+      console.log("these hours are taken", takenHours);
+      setAvailableHours(findAvailableHours(takenHours));
+    }
+    // if (props.booking) {
+    //   console.log("there is a booking");
+    //   availableHours = availableHours.filter((hour) => hour !== props.booking);
+    // }
+    // props.setHour(availableHours);
+    // } else {
+    //   setEvents(availableHours);
+    // }
+  }, [props.filteredEvents]);
+  function findAvailableHours(takenHours) {
+    let i = 0;
+    let j = 0;
+    let result = [];
+
+    while (i < allHours.length) {
+      if (allHours[i] === takenHours[j]) {
+        j++;
+        i++;
+      } else if (allHours[i] < takenHours[j]) {
+        result.push(allHours[i]);
+        i++;
+      } else {
+        result.push(allHours[i]);
+        i++;
       }
-    };
-    fetchEvents();
-  }, [props.day]);
-
-  useEffect(() => {
-    const allHours = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
-
-    const availableHours = allHours.filter(
-      (hour) => !events.find((e) => new Date(e.startTime).getHours() === hour)
-    );
-
-    setHours(availableHours);
-  }, [events]);
-
+    }
+    return result;
+  }
   function filterEventsByDate(events, selectedDate) {
     return events.filter((event) => {
       const eventStart = new Date(event.start.dateTime);
@@ -60,8 +76,9 @@ function HourPicker(props) {
     };
 
     props.openModal(true);
+
     const bookingTime = e.target.innerHTML;
-    props.setHour(bookingTime);
+    props.setHourPicked(bookingTime);
     findWhen(bookingTime);
   };
 
@@ -69,15 +86,18 @@ function HourPicker(props) {
     <>
       <div className="container">
         <header className="header">{props.day.toDateString()}</header>
-        {hours.map((hour) => (
+        {availableHours.map((hour) => (
           <button
             className="hourButton"
             value="hour"
             key={hour}
             onClick={handleBookingClick}
           >
-            {String(hour).length === 1 ? `0${hour}` : hour}:00 -{" "}
-            {String(hour + 1).length === 1 ? `0${hour + 1}` : hour + 1}:00
+            {String(hour).length === 1 ? "0" + hour : hour}:00 -{" "}
+            {String(hour + 1).length === 1
+              ? "0" + String(hour + 1)
+              : String(hour + 1)}
+            :00
           </button>
         ))}
       </div>

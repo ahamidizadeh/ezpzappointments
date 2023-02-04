@@ -4,51 +4,58 @@ import HourPicker from "./components/hourPicker";
 import "react-calendar/dist/Calendar.css";
 import "./App.css";
 import ReservationModal from "./components/reservationModal";
-
+import axios from "axios";
 function App() {
-  useEffect(() => {});
-  // authenticate users with gmail
-  // add events
-  // const handleClickDay = async (value) => {
-  //   const data = JSON.stringify(value);
-  //   console.log(data);
-  //   await axios
-  //     .post("http://localhost:1234/dateInfo", { date: data })
-  //     .then((res) => console.log(res))
-  //     .catch((error) => console.log(error));
-  // };
   const [value, onChange] = useState(new Date());
-  const [events, setEvents] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [hour, setHour] = useState("");
+  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [hour, setHour] = useState([]);
   const [when, setWhen] = useState("");
+  const [hourPicked, setHourPicked] = useState(null);
+  const [booking, setBooking] = useState(null);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const res = await axios.get("http://localhost:1234/events");
+      setEvents(res.data);
+      if (events.length) {
+        setFilteredEvents(
+          events.filter(
+            (e) => new Date(e.startTime).getDate() === new Date(value).getDate()
+          )
+        );
+      }
+    };
+
+    fetchEvents();
+  }, [value]);
 
   return (
     <div className="app">
       <div className="calendarHour">
-        <Calendar
-          className="calendar"
-          onChange={onChange}
-          value={value}
-
-          // onClickDay={handleClickDay}
-        />
+        <Calendar className="calendar" onChange={onChange} value={value} />
         <HourPicker
           className="hourpicker"
           setWhen={setWhen}
-          events={events}
+          booking={booking}
           day={value}
           openModal={setShowModal}
+          filteredEvents={filteredEvents}
+          setBooking={setBooking}
           setHour={setHour}
+          setHourPicked={setHourPicked}
+          hour={hour}
         />
       </div>
       {showModal ? (
         <ReservationModal
           className="reservationForm"
+          booking={booking}
+          setBooking={setBooking}
           day={value}
-          events={events}
+          hourPicked={hourPicked}
           when={when}
-          setEvents={setEvents}
           hour={hour}
           hide={setShowModal}
         />

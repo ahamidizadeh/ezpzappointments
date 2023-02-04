@@ -20,28 +20,30 @@ function ReservationModal(props) {
       .notRequired(),
     info: Yup.string().min(3).max(75),
   });
-  const startTime = Number(props.hour.substring(0, 2));
-  const endTime = Number(props.hour.slice(7).trim().substring(0, 2));
-  props.day.setHours(startTime, 0, 0);
-  const startOfEvent = new Date(props.day);
-  const endOfEvent = new Date(props.day);
-  endOfEvent.setHours(endTime, 0, 0);
-  // const date = props.day.toLocaleString();
 
   const handleCancel = () => {
     // change it to true later cause it doesnt make sense lol
     props.hide(false);
+    props.setBooking(null);
+    console.log(props.booking);
   };
   const handleSubmit = (values, { setSubmitting }) => {
+    const startTime = Number(props.hourPicked.substring(0, 2));
+    const endTime = Number(props.hourPicked.slice(7).trim().substring(0, 2));
+    // props.day.setHours(startTime, 0, 0);
+    const startOfEvent = new Date(props.day);
+    const endOfEvent = new Date(props.day);
+    endOfEvent.setHours(endTime, 0, 0);
+    startOfEvent.setHours(startTime, 0, 0);
+
     props.hide(false);
     setSubmitting(false);
-
     const appointment = {
-      fieldData: values,
+      data: values,
       start: startOfEvent,
       end: endOfEvent,
     };
-
+    props.setBooking(startTime);
     axios
       .post("http://localhost:1234/service", appointment)
       .then((res) => {
@@ -54,7 +56,8 @@ function ReservationModal(props) {
       <div className="titleForm">
         <CancelIcon className="cancel" onClick={handleCancel} />
         <h1>BOOKING</h1>
-        <h3 className="date">{props.day.toLocaleString()}</h3>
+        <h3 className="date">{props.day.toDateString()}</h3>
+        <h3 className="date">{props.hourPicked}</h3>
         <h3 className="desc">{props.when}</h3>
         {/* <h3 className="time">{props.hour}</h3> */}
         <Formik

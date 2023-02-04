@@ -4,6 +4,19 @@ const { google } = require("googleapis");
 const { check, validationResult } = require("express-validator");
 const axios = require("axios");
 const Events = require("../models/Events.js");
+// const sgMail = require("@sendgrid/mail");
+const nodemailer = require("nodemailer");
+
+let transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  requireTLS: true,
+  auth: {
+    user: process.env.USERNAME,
+    pass: process.env.PASS,
+  },
+});
 const client = new GoogleAuth({
   keyFile: "./routes/service_acc_key.json",
   scopes: ["https://www.googleapis.com/auth/calendar"],
@@ -74,22 +87,27 @@ router.post(
     check("fieldData.email").isEmail(),
   ],
   async (req, res) => {
-    // let eventStart = req.start;
-    // let eventEnd = req.end;
-    // if (!(eventStart instanceof Date)) {
-    //   return res.status(400).json({ errors: "Invalid date format" });
-    // }
-    // if (!(eventEnd instanceof Date)) {
-    //   return res.status(400).json({ errors: "Invalid date format end date" });
-    // }
     const errors = validationResult(req.body);
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
 
     const eventInfo = req.body;
+    const email = {
+      to: `${eventInfo.data["email"]}`,
+      from: "ezpz.makeappointments@gmail.com",
+      subject: "Confirmation Email",
+      html: `<h1>Hi ${eventInfo.data["name"]}</h1>
+      <p>Thank you for booking an event with Ali. Your event details are as follows:</p>
+             <p>Event Name: ${eventInfo.data["info"]}</p>
+             <p>Event Date: ${eventInfo.start}</p>
+             <p>To cancel your event, please click <a>here</a>.</p>`,
+    };
+
     const newEvent = new Events({
-      title: eventInfo.fieldDate["info"],
+      title: eventInfo.data["info"],
+      email: eventInfo.data["email"],
+      phone: eventInfo.data["phone"],
       startTime: eventInfo.start,
       endTime: eventInfo.end,
     });
@@ -97,31 +115,22 @@ router.post(
       if (err) {
         console.log(err);
       } else {
-        console.log("new added");
+        console.log("save to mongo");
       }
     });
-    // const event = {
-    //   calendarId: "ahamidizadeh@gmail.com",
-    //   summary: eventInfo.fieldData.info,
-    //   start: { dateTime: eventInfo.start },
-    //   end: { dateTime: eventInfo.end },
-    // };
-
-    // calendar.events.insert({
-    //   calendarId: "ahamidizadeh@gmail.com",
-    //   resource: event,
-    // });
-    console.log(eventInfo);
-    // axios
-    //   .get("http://localhost:1234/service")
-    //   .then((result) => {
-    //     let data = result.data;
-    //     console.log("Data", data);
-    //   })
-    //   .catch((error) => console.log(error));
-    // // console.log(list.data);
-    // // res.end(JSON.stringify(list));
-    // res.json(list.data);
+    transporter.sendMail(email, (error, info) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("email sent" + info.response);
+      }
+    });
+    //   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    //   sgMail
+    //     .send(email)
+    //     .then(() => console.log("email was sent!"))
+    //     .catch((error) => console.log("error:", error));
+    // }
   }
 );
 module.exports = router;
