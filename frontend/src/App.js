@@ -13,9 +13,10 @@ function App() {
   const [hour, setHour] = useState([]);
   const [when, setWhen] = useState("");
   const [hourPicked, setHourPicked] = useState(null);
-  const [booking, setBooking] = useState(null);
+  const [booking, setBooking] = useState(0);
 
   useEffect(() => {
+    console.log("this is booked just now: ", booking);
     const fetchEvents = async () => {
       const res = await axios.get("http://localhost:1234/events");
       setEvents(res.data);
@@ -27,9 +28,14 @@ function App() {
         );
       }
     };
-
     fetchEvents();
+    if (booking) {
+      fetchEvents();
+    }
   }, [value]);
+  useEffect(() => {
+    onChange(new Date());
+  }, [booking]);
 
   return (
     <div className="app">

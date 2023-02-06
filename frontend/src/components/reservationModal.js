@@ -27,10 +27,10 @@ function ReservationModal(props) {
     props.setBooking(null);
     console.log(props.booking);
   };
-  const handleSubmit = (values, { setSubmitting }) => {
+  const handleSubmit = async (values, { setSubmitting }) => {
     const startTime = Number(props.hourPicked.substring(0, 2));
     const endTime = Number(props.hourPicked.slice(7).trim().substring(0, 2));
-    // props.day.setHours(startTime, 0, 0);
+
     const startOfEvent = new Date(props.day);
     const endOfEvent = new Date(props.day);
     endOfEvent.setHours(endTime, 0, 0);
@@ -43,13 +43,15 @@ function ReservationModal(props) {
       start: startOfEvent,
       end: endOfEvent,
     };
-    props.setBooking(startTime);
-    axios
-      .post("http://localhost:1234/service", appointment)
+
+    const res = await axios
+      .post("http://localhost:1234/events", appointment)
       .then((res) => {
-        console.log(res);
+        props.setBooking(props.booking + 1);
+        alert(res.data);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => alert(error));
+    return res;
   };
   return (
     <>
@@ -98,32 +100,6 @@ function ReservationModal(props) {
           )}
         </Formik>
       </div>
-      {/* <form className="reservationForm">
-        <div className="reservationContainer">
-          <CancelIcon className="cancel" onClick={handleCancel} />
-          <div className="titleForm">
-            <h1 className="formtitle">{"BOOKING"}</h1>
-            <h3 className="date">{date}</h3>
-            <h3 className="desc">{props.when}</h3>
-            <h3 className="time">{props.hour}</h3>
-          </div>
-          <input placeholder="name" className="name" id="name"></input>
-          <input placeholder="email" className="email" id="email"></input>
-          <input placeholder="phone" className="phone" id="phone"></input>
-          <input
-            placeholder="reservation info"
-            className="info"
-            id="info"
-          ></input>
-          <button
-            className="bookingButton"
-            type="submit"
-            onClick={handleSubmit}
-          >
-            BOOK
-          </button>
-        </div>
-      </form> */}
     </>
   );
 }
