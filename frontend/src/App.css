@@ -1,26 +1,24 @@
+* {
+  margin: 0;
+}
 .app {
   display: flex;
   flex-direction: row;
-  height: 500px;
-  background-color: rgb(62, 116, 164);
+  height: max-content;
+  background-color: rgb(24, 19, 26);
 }
 .calendarHour {
-  display: flex;
-  justify-content: space-between;
+  color: rgb(169, 96, 28);
+  margin-left: 100px;
+  margin-top: 125px;
+  display: block;
+  /* justify-content: space-between; */
 }
 .calendar {
-  margin-top: 100px;
-  margin-bottom: 550px;
-  margin-left: 100px;
-  margin-right: 55px;
+  height: max-content;
+  background-color: rgb(212, 228, 220);
+  border-radius: 15px;
 }
-/* 
 .hourpicker {
-  position: static;
-  background-color: inherit;
-  margin-right: 600px;
-  margin-left: 0;
-} */
-.reservationForm {
-  margin-bottom: 200px;
+  margin-top: 100px;
 }

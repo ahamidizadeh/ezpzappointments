@@ -1,37 +1,59 @@
 .reservationForm {
-  margin-top: 30px;
+  margin-top: 40px;
+  margin-bottom: none;
   border-radius: 5%;
-  height: 400px;
-  background-color: rgb(69, 48, 81);
+  height: fit-content;
+  background-color: inherit;
   width: 225px;
 }
 .name,
 .info,
 .email,
 .phone {
-  margin-left: 6px;
+  border-radius: 10px;
+  margin-left: 2px;
+  padding: 10px;
   width: 200px;
-  height: 55px;
-  font-family: cursive;
+  height: 30px;
+
+  font-family: "Times New Roman", Times, serif;
   font-weight: bolder;
   font-size: medium;
 }
+.name,
+.info,
+.email,
+.phone::placeholder {
+  font-size: 15px;
+  padding-top: 10px;
+}
 .bookingButton {
   position: relative;
-  cursor: crosshair;
+  cursor: pointer;
   left: 5%;
   margin-bottom: 10px;
   width: 200px;
   height: 33px;
   text-align: center;
   margin-top: 10px;
-  background-color: aquamarine;
+  color: white;
+  border-radius: 15px;
+  background-color: rgb(155, 203, 218);
+}
+.bookingButton:hover {
+  transition: 2s;
+  background-color: rgb(39, 166, 224);
 }
 .cancel {
-  margin-left: 200px;
-  margin-top: 5px;
+  margin-left: 193px;
+  margin-top: 7px;
+
   color: white;
   cursor: pointer;
+}
+.cancel:hover {
+  transition: 1.5s;
+  color: red;
 }
 .formtitle {
   position: relative;
@@ -41,21 +63,27 @@
   font-size: x-large;
 }
 .titleForm {
-  display: inline-block;
-  background-color: rgb(49, 20, 78);
+  margin-left: 20px;
+  border-radius: 10px;
+  margin-top: 150px;
+  height: fit-content;
+  display: block;
+  background-color: rgb(64, 50, 118);
 }
 .titleForm > h1 {
-  color: aquamarine;
+  color: rgb(175, 176, 232);
   margin-left: 10px;
 }
 .date,
 .desc,
-.time {
-  color: white;
-  margin-top: 0;
-  margin-left: 5px;
+.hour {
+  font-family: "Times New Roman", Times, serif;
+  justify-content: space-between;
+  padding: 2px;
+  text-align: center;
+  color: rgb(169, 193, 221);
 }
 .error {
-  color: yellow;
+  color: rgb(241, 131, 234);
   margin-left: 10px;
 }

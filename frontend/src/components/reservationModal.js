@@ -4,6 +4,7 @@ import axios from "axios";
 import "./reservationModal.css";
 import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
+import Draggable from "react-draggable";
 
 function ReservationModal(props) {
   const phoneRegExp =
@@ -55,51 +56,52 @@ function ReservationModal(props) {
   };
   return (
     <>
-      <div className="titleForm">
-        <CancelIcon className="cancel" onClick={handleCancel} />
-        <h1>BOOKING</h1>
-        <h3 className="date">{props.day.toDateString()}</h3>
-        <h3 className="date">{props.hourPicked}</h3>
-        <h3 className="desc">{props.when}</h3>
-        {/* <h3 className="time">{props.hour}</h3> */}
-        <Formik
-          initialValues={{ name: "", email: "", phone: "", info: "" }}
-          validationSchema={ReservationSchema}
-          onSubmit={handleSubmit}
-        >
-          {({ errors, touched, handleSubmit, isSubmitting }) => (
-            <Form className="reservationForm" onSubmit={handleSubmit}>
-              <label>name</label>
-              <Field name="name" className="name" placeholder="name" />
-              {errors.name && touched.name ? (
-                <div className="error">{errors.name}</div>
-              ) : null}
-              <label>email</label>
-              <Field name="email" className="email" placeholder="email" />
-              {errors.email && touched.email ? (
-                <div className="error">{errors.email}</div>
-              ) : null}
-              <label>phone</label>
-              <Field name="phone" className="phone" placeholder="phone" />
-              {errors.phone && touched.phone ? (
-                <div className="error">{errors.phone}</div>
-              ) : null}
-              <label>info</label>
-              <Field name="info" className="info" placeholder="info" />
-              {errors.info && touched.info ? (
-                <div className="error">{errors.info}</div>
-              ) : null}
-              <button
-                className="bookingButton"
-                type="submit"
-                disabled={isSubmitting}
-              >
-                BOOK
-              </button>
-            </Form>
-          )}
-        </Formik>
-      </div>
+      <Draggable>
+        <div className="titleForm">
+          <CancelIcon className="cancel" onClick={handleCancel} />
+
+          <h3 className="date">{props.day.toDateString()}</h3>
+          <h3 className="hour">{props.hourPicked}</h3>
+          <h3 className="desc">{props.when}</h3>
+          {/* <h3 className="time">{props.hour}</h3> */}
+          <Formik
+            initialValues={{ name: "", email: "", phone: "", info: "" }}
+            validationSchema={ReservationSchema}
+            onSubmit={handleSubmit}
+          >
+            {({ errors, touched, handleSubmit, isSubmitting }) => (
+              <Form className="reservationForm" onSubmit={handleSubmit}>
+                <Field name="name" className="name" placeholder="Name" />
+                {errors.name && touched.name ? (
+                  <div className="error">{errors.name}</div>
+                ) : null}
+
+                <Field name="email" className="email" placeholder="Email" />
+                {errors.email && touched.email ? (
+                  <div className="error">{errors.email}</div>
+                ) : null}
+
+                <Field name="phone" className="phone" placeholder="Phone" />
+                {errors.phone && touched.phone ? (
+                  <div className="error">{errors.phone}</div>
+                ) : null}
+
+                <Field name="info" className="info" placeholder="Event Info" />
+                {errors.info && touched.info ? (
+                  <div className="error">{errors.info}</div>
+                ) : null}
+                <button
+                  className="bookingButton"
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  BOOK
+                </button>
+              </Form>
+            )}
+          </Formik>
+        </div>
+      </Draggable>
     </>
   );
 }
